@@ -25,30 +25,12 @@ export default class Enemy extends Animation {
   init(speed) {
     this.x = rnd(0, window.innerWidth - ENEMY_WIDTH)
     this.y = rnd(0, window.innerHeight / 2 - this.height) 
-    this.alpha = 100
+    this.alpha = 200
 
     this[__.speed] = speed
 
     this.visible = true
   }
-
-  drawImage(ctx, image, x , y, alpha)
-	{
-		// 绘制图片
-		ctx.drawImage(image , x , y, this.width, this.height);
-		// 获取从x、y开始，宽为image.width、高为image.height的图片数据
-		// 也就是获取绘制的图片数据
-    var imgData = ctx.getImageData(x , y , this.width , this.height);
-    
-		for (var i = 0 , len = imgData.data.length ; i < len ; i += 4 )
-		{
-      // 改变每个像素的透明度
-      //console.log(imgData.data[i])
-      imgData.data[i + 3] = imgData.data[i + 3] * (1 - alpha);
-		}
-		// 将获取的图片数据放回去。
-		ctx.putImageData(imgData , x , y);
-	}
 
   // 预定义爆炸的帧动画
   initExplosionAnimation() {
@@ -67,20 +49,23 @@ export default class Enemy extends Animation {
   drawToCanvas(ctx) {
     if (!this.visible) return
 
-    this.drawImage(ctx, this.img, this.x, this.y, this.alpha / 100)
-    /*ctx.drawImage(
+    //this.drawImage(ctx, this.img, this.x, this.y, this.alpha / 100)
+    let tmp = ctx.globalAlpha
+    ctx.globalAlpha = 1 - Math.abs(this.alpha - 100) / 100
+    ctx.drawImage(
       this.img,
       this.x,
       this.y,
       this.width,
       this.height
-    )*/
+    )
+    ctx.globalAlpha = tmp
   }
 
   // 每一帧更新子弹位置
   update() {
     //this.y += this[__.speed]
-   this.alpha -= 1
+   this.alpha--
     // 对象回收
     //if (this.y > window.innerHeight + this.height) databus.removeEnemey(this)
     if (!this.alpha){
