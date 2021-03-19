@@ -1,4 +1,5 @@
 import Player from './player/index'
+import Ball from './player/ball'
 import Enemy from './npc/enemy'
 import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
@@ -29,6 +30,8 @@ export default class Main {
 
     this.bg = new BackGround(ctx)
     this.player = new Player(ctx)
+    this.ball = new Ball(ctx)
+    this.ball.init(5, this.player)
     this.gameinfo = new GameInfo()
     this.music = new Music()
 
@@ -116,9 +119,10 @@ export default class Main {
       .forEach((item) => {
         item.drawToCanvas(ctx)
       })
-
+    
     this.player.drawToCanvas(ctx)
-
+    this.ball.drawToCanvas(ctx) 
+    
     databus.animations.forEach((ani) => {
       if (ani.isPlaying) {
         ani.aniRender(ctx)
@@ -153,12 +157,10 @@ export default class Main {
 
     this.enemyGenerate()
 
-    this.collisionDetection()
+    this.ball.update()
 
-   /* if (databus.frame % 20 === 0) {
-      this.player.shoot()
-      this.music.playShoot()
-    }*/
+    //this.collisionDetection()
+
   }
 
   // 实现游戏帧循环

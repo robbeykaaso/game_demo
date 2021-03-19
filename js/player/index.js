@@ -1,6 +1,7 @@
 import Sprite from '../base/sprite'
 import Bullet from './bullet'
 import DataBus from '../databus'
+import Ball from './ball'
 
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
@@ -19,7 +20,8 @@ export default class Player extends Sprite {
     // 玩家默认处于屏幕底部居中位置
     this.x = screenWidth / 2 - this.width / 2
     this.y = screenHeight - this.height - 30
-
+    this.PLAYER_WIDTH = PLAYER_WIDTH
+    this.PLAYER_HEIGHT = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
 
@@ -37,7 +39,7 @@ export default class Player extends Sprite {
    * @return {Boolean}: 用于标识手指是否在飞机上的布尔值
    */
   checkIsFingerOnAir(x, y) {
-    const deviation = 30
+    const deviation = 0
 
     return !!(x >= this.x - deviation
               && y >= this.y - deviation
@@ -62,6 +64,8 @@ export default class Player extends Sprite {
 
     else if (disY > screenHeight - this.height) disY = screenHeight - this.height
 
+    if (this.playerMoved)
+      this.playerMoved({x: this.x, y: this.y, nx: disX, ny: disY})
     this.x = disX
     this.y = disY
   }
@@ -82,6 +86,9 @@ export default class Player extends Sprite {
         this.touched = true
 
         this.setAirPosAcrossFingerPosZ(x, y)
+      }else{
+        if (this.ball)
+          this.ball.startMove(x, y)
       }
     }))
 
@@ -99,21 +106,5 @@ export default class Player extends Sprite {
 
       this.touched = false
     }))
-  }
-
-  /**
-   * 玩家射击操作
-   * 射击时机由外部决定
-   */
-  shoot() {
-    const bullet = databus.pool.getItemByClass('bullet', Bullet)
-
-    bullet.init(
-      this.x + this.width / 2 - bullet.width / 2,
-      this.y - 10,
-      10
-    )
-
-    databus.bullets.push(bullet)
   }
 }
