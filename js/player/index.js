@@ -56,11 +56,11 @@ export default class Player extends Sprite {
     let disX = x - this.width / 2
     let disY = y - this.height / 2
 
-    if (disX < 0) disX = 0
+    if (disX < this.ball.width * 1.5) disX = this.ball.width * 1.5
 
-    else if (disX > screenWidth - this.width) disX = screenWidth - this.width
+    else if (disX > screenWidth - this.width - this.ball.width * 1.5) disX = screenWidth - this.width - this.ball.width * 1.5
 
-    if (disY <= screenHeight / 2) disY = screenHeight / 2
+    if (disY <= screenHeight / 2 + this.ball.height) disY = screenHeight / 2 + this.ball.height
 
     else if (disY > screenHeight - this.height - this.ball.height * 1.5) disY = screenHeight - this.height - this.ball.height * 1.5
 

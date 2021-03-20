@@ -18,6 +18,10 @@ export default class Ball extends Sprite {
     return aBallX + this.width > aPlayerX && aBallX < aPlayerX + this.player.width
   }
 
+  inHeightRange(aBallY, aPlayerY){
+    return aBallY + this.height > aPlayerY && aBallY < aPlayerY + this.player.height
+  }
+
   init(speed, aPlayer) {
     this.player = aPlayer
     aPlayer.ball = this
@@ -65,6 +69,22 @@ export default class Ball extends Sprite {
               break
             }
           }
+          if (dt.x > this.x + this.width && dt.nx < this.x + this.width){
+            let alpha = (dt.x - this.x - this.width) / (dt.x - dt.nx)
+            let ay = this.player.y + alpha * (dt.ny - dt.y)
+            if (this.inWidthRange(this.y, ay)){
+              this.act.left(dt.nx - dt.x)
+              break
+            }
+          }
+          if (dt.x + this.player.width < this.x && dt.nx + this.player.width > this.x){
+            let alpha = (dt.x + this.player.width - this.x) / (dt.x - dt.nx)
+            let ay = this.player.y + alpha * (dt.ny - dt.y)
+            if (this.inWidthRange(this.y, ay)){
+              this.act.right(dt.nx - dt.x)
+              break
+            }
+          }
         }while(0)
       }else{
         this.x += dt.nx - dt.x
@@ -101,6 +121,22 @@ export default class Ball extends Sprite {
           let ax = this.x + alpha * delx
           if (this.inWidthRange(ax, this.player.x)){
             this.act.bottom()
+            break
+          }
+        }
+        if (this.x + this.width < this.player.x && this.x + this.width + delx > this.player.x){
+          let alpha = (this.player.x - this.x - this.width) / delx
+          let ay = this.y + alpha * dely
+          if (this.inHeightRange(ay, this.player.y)){
+            this.act.left()
+            break
+          }
+        }
+        if (this.x > this.player.x + this.player.width && this.x + delx < this.player.x + this.player.width){
+          let alpha = (this.player.x + this.player.width - this.x) / delx
+          let ay = this.y + alpha * dely
+          if (this.inHeightRange(ay, this.player.y)){
+            this.act.right()
             break
           }
         }
