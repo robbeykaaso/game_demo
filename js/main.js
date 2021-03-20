@@ -5,6 +5,7 @@ import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
 import DataBus from './databus'
+import Test from './interface/interface'
 
 const ctx = canvas.getContext('2d')
 const databus = new DataBus()
@@ -16,7 +17,6 @@ export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
-
     this.restart()
   }
 
