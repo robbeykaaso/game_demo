@@ -9,19 +9,17 @@ export default class Player extends Sprite {
   constructor() {
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
-    // 玩家默认处于屏幕底部居中位置
-
     this.PLAYER_WIDTH = PLAYER_WIDTH
     this.PLAYER_HEIGHT = PLAYER_HEIGHT
-    // 用于在手指移动的时候标识手指是否已经在飞机上了
-    this.touched = false
+    
+    this.bindTouchStart = this.touchStart.bind(this)
+    this.bindTouchMove = this.touchMove.bind(this)
+    this.bindTouchEnd = this.touchEnd.bind(this)
   }
 
-  init(aMoveRange, aX, aY, aPlayer = true){
+  init(aMoveRange, aX, aY){
     this.x = aX
     this.y = aY
-    if (aPlayer)
-      this.initEvent()
     this.move_range = aMoveRange
   }
 
@@ -93,37 +91,46 @@ export default class Player extends Sprite {
     this.y = disY
   }
 
-  initEvent() {
-    canvas.addEventListener('touchstart', ((e) => {
-      e.preventDefault()
+  touchStart(e){
+    e.preventDefault()
+    const x = e.touches[0].clientX
+    const y = e.touches[0].clientY
 
-      const x = e.touches[0].clientX
-      const y = e.touches[0].clientY
+    //
+    if (this.inBoundBox(x, y)) {
+      this.touched = true
 
-      //
-      if (this.inBoundBox(x, y)) {
-        this.touched = true
+      this.moveTo(x, y)
+    }else{
+      if (this.ball)
+        this.ball.startMove(x, y)
+    }
+  }
 
-        this.moveTo(x, y)
-      }else{
-        if (this.ball)
-          this.ball.startMove(x, y)
-      }
-    }))
+  touchMove(e){
+    e.preventDefault()
 
-    canvas.addEventListener('touchmove', ((e) => {
-      e.preventDefault()
+    const x = e.touches[0].clientX
+    const y = e.touches[0].clientY
 
-      const x = e.touches[0].clientX
-      const y = e.touches[0].clientY
+    if (this.touched) this.moveTo(x, y)
+  }
 
-      if (this.touched) this.moveTo(x, y)
-    }))
+  touchEnd(e){
+    e.preventDefault()
+    this.touched = false
+  }
 
-    canvas.addEventListener('touchend', ((e) => {
-      e.preventDefault()
+  addEvents() {
+    this.touched = false
+    canvas.addEventListener('touchstart', this.bindTouchStart)
+    canvas.addEventListener('touchmove', this.bindTouchMove)
+    canvas.addEventListener('touchend', this.bindTouchEnd)
+  }
 
-      this.touched = false
-    }))
+  removeEvents(){
+    canvas.removeEventListener('touchstart', this.bindTouchStart)
+    canvas.removeEventListener('touchmove', this.bindTouchMove)
+    canvas.removeEventListener('touchend', this.bindTouchEnd)
   }
 }
