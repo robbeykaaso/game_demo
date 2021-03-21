@@ -19,7 +19,7 @@ export default class Player extends Sprite {
 
     // 玩家默认处于屏幕底部居中位置
     this.x = screenWidth / 2 - this.width / 2
-    this.y = screenHeight - this.height - 30
+    this.y = screenHeight - this.height - 60
     this.PLAYER_WIDTH = PLAYER_WIDTH
     this.PLAYER_HEIGHT = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -56,13 +56,13 @@ export default class Player extends Sprite {
     let disX = x - this.width / 2
     let disY = y - this.height / 2
 
-    if (disX < 0) disX = 0
+    if (disX < this.ball.width * 1.5) disX = this.ball.width * 1.5
 
-    else if (disX > screenWidth - this.width) disX = screenWidth - this.width
+    else if (disX > screenWidth - this.width - this.ball.width * 1.5) disX = screenWidth - this.width - this.ball.width * 1.5
 
-    if (disY <= screenHeight / 2) disY = screenHeight / 2
+    if (disY <= screenHeight / 2 + this.ball.height) disY = screenHeight / 2 + this.ball.height
 
-    else if (disY > screenHeight - this.height) disY = screenHeight - this.height
+    else if (disY > screenHeight - this.height - this.ball.height * 1.5) disY = screenHeight - this.height - this.ball.height * 1.5
 
     if (this.playerMoved)
       this.playerMoved({x: this.x, y: this.y, nx: disX, ny: disY})

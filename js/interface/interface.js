@@ -14,8 +14,8 @@ function interfaceTest(){
         let openid = e.data.openid //返回openid
         console.log('openid: ' + openid);
         model[openid] = {
-          x: 0,
-          y: 0
+          "x": 0,
+          "y": 0
         }
 
         Req({url: url + "/game/start/" + openid,

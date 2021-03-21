@@ -5,7 +5,11 @@ import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
 import DataBus from './databus'
+
 import StartGame from './startGame'
+
+import Test from './interface/interface'
+
 
 const ctx = canvas.getContext('2d')
 const databus = new DataBus()
@@ -18,8 +22,8 @@ export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
-    this.startGame = new StartGame(ctx)
     
+  
     this.restart()
   }
 
@@ -30,7 +34,7 @@ export default class Main {
       'touchstart',
       this.touchHandler
     )
-
+    this.startGame = new StartGame(ctx)
     this.bg = new BackGround(ctx)
     this.player = new Player(ctx)
     this.ball = new Ball(ctx)
