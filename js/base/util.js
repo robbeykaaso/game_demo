@@ -9,13 +9,34 @@ function request(options) {
       data:  {data: JSON.stringify(options.data) || "{}"},
       header: options.header || {'Content-Type': 'application/json;charset=UTF-8'},
       success: res => {
-        resolve(res);
+        resolve(res)
       },
       fail: err => {
-        reject(err);
+        reject(err)
       }
-    });
-  });
+    })
+  })
 }
-// 暴露给外界
-export default request;
+
+function login(){
+  return new Promise((resolve, reject) => {
+    wx.login({
+      success: res => {
+          resolve(res)
+      },
+      fail: err => {
+        reject(err)
+      }
+    })
+  })
+}
+
+function random(aStart, aEnd) {
+  return Math.floor(Math.random() * (aEnd - aStart) + aStart)
+}
+
+module.exports = {
+  request,
+  login,
+  random
+}

@@ -1,42 +1,34 @@
-import Req from '../base/util'
+import util from '../base/util'
 
 const url = "https://127.0.0.1:3000"
 const model = {}
 
-function interfaceTest(){
-  wx.login({
-    success: res => {
-      Req({url: url + "/util/openid",
-           data:{code: res.code,
-                 app: "ball"}
-          })
-      .then( e => {
-        let openid = e.data.openid //返回openid
-        console.log('openid: ' + openid);
-        model[openid] = {
-          "x": 0,
-          "y": 0
-        }
+async function interfaceTest(){
+  let res = await util.login()
 
-        Req({url: url + "/game/start/" + openid,
-             data: model})
-        .then( e => {
-          let gameid = e.data.game_id
-          console.log('gameid: ' + gameid)
-          let status = e.data.status
-          console.log('status: ' + status)
+  res = await util.request({url: url + "/util/openid",
+                            data: {
+                              code: res.code,
+                              app: "ball"
+                            }
+        })
+  let openid = res.data.openid //返回openid
+  console.log('openid: ' + openid);
+  model[openid] = {
+    "x": 0,
+    "y": 0
+  }
 
-          model.ball = {start: openid}
-          Req({url: url + "/game/update/" + openid + "/" + gameid,
-               data: model})
-          .then( e => {
-            console.log(e.data)
-          })
-        })    
-      })
+  res = await util.request({url: url + "/game/start/" + openid,
+                            data: model})
+  let gameid = res.data.game_id
+  console.log('gameid: ' + gameid)
+  let status = res.data.status
+  console.log('status: ' + status)
 
-      
-    }
-  })
+  model.ball = {start: openid}
+  res = await util.request({url: url + "/game/update/" + openid + "/" + gameid,
+                            data: model})
+  console.log(res.data)
 }
 interfaceTest()

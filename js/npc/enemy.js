@@ -1,4 +1,5 @@
 import Animation from '../base/animation'
+import util from '../base/util'
 import DataBus from '../databus'
 
 const ENEMY_IMG_SRC = 'images/enemy.png'
@@ -11,10 +12,6 @@ const __ = {
 
 const databus = new DataBus()
 
-function rnd(start, end) {
-  return Math.floor(Math.random() * (end - start) + start)
-}
-
 export default class Enemy extends Animation {
   constructor() {
     super(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT)
@@ -23,8 +20,8 @@ export default class Enemy extends Animation {
   }
 
   init(speed) {
-    this.x = rnd(0, window.innerWidth - ENEMY_WIDTH)
-    this.y = rnd(0, window.innerHeight / 2 - this.height) 
+    this.x = util.random(0, window.innerWidth - ENEMY_WIDTH)
+    this.y = util.random(0, window.innerHeight / 2 - this.height) 
     this.alpha = 200
 
     this[__.speed] = speed
