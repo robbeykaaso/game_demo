@@ -5,9 +5,11 @@ import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
 import DataBus from './databus'
+import StartGame from './startGame'
 
 const ctx = canvas.getContext('2d')
 const databus = new DataBus()
+
 
 /**
  * 游戏主函数
@@ -16,7 +18,8 @@ export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
-
+    this.startGame = new StartGame(ctx)
+    
     this.restart()
   }
 
@@ -167,8 +170,12 @@ export default class Main {
   loop() {
     databus.frame++
 
-    this.update()
-    this.render()
+    
+    this.startGame.drawToCanvas(ctx)
+    if(this.startGame.start){
+      this.update()
+      this.render()
+    }
 
     this.aniId = window.requestAnimationFrame(
       this.bindLoop,
