@@ -41,9 +41,13 @@ export default class Sprite {
 
     if (!this.visible || !sp.visible) return false
 
-    return !!(spX >= this.x
-              && spX <= this.x + this.width
-              && spY >= this.y
-              && spY <= this.y + this.height)
+    return this.pointIsIn(spX, spY)
+  }
+
+  pointIsIn(aX, aY){
+    return !!(aX >= this.x
+      && aX <= this.x + this.width
+      && aY >= this.y
+      && aY <= this.y + this.height)
   }
 }

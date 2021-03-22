@@ -13,48 +13,97 @@ export default class Ball extends Sprite {
     super(BALL_IMG_SRC, BALL_WIDTH, BALL_HEIGHT)
 
   }
-  init(speed, aPlayer) {
-    this.player = aPlayer
-    aPlayer.ball = this
-    
-    this.player.playerMoved = (e)=>{
-      const dt = e
-      if (!this.stick){
-        if (dt.y > this.y + this.height && dt.ny < this.y + this.height){
-          let alpha = (dt.y - this.y - this.height) / (dt.y - dt.ny)
-          let ax = this.player.x + alpha * (dt.nx - dt.x)
-          if (this.x + this.width > ax && this.x < ax + this.player.width){
-            this.stick = true
-          }
-        }
-      }else{
-        this.x += dt.nx - dt.x
-        this.y += dt.ny - dt.y
+
+  inWidthRange(aBallX, aPlayerX, aObject){
+    return aBallX + this.width > aPlayerX && aBallX < aPlayerX + aObject.width
+  }
+
+  inHeightRange(aBallY, aPlayerY, aObject){
+    return aBallY + this.height > aPlayerY && aBallY < aPlayerY + aObject.height
+  }
+
+  init(speed, aOwner) {    
+    this.act = {
+      top: (aDelY)=>{
+        //this.stick = true
+        if (this.direction.y > 0)
+          this.direction.y *= - 1
+        else
+          this.y += aDelY
+      },
+      left: (aDelX)=>{
+        if (this.direction.x > 0)
+          this.direction.x *= - 1
+        else
+          this.x += aDelX
+      },
+      right: (aDelX)=>{
+        if (this.direction.x < 0)
+          this.direction.x *= - 1
+        else
+          this.x += aDelX
+      },
+      bottom: (aDelY)=>{
+        if (this.direction.y < 0)
+          this.direction.y *= - 1
+        else
+          this.y += aDelY 
       }
     }
 
-    this.stick = true
-
-    this.x = this.player.x + (this.player.width - this.width) * 0.5
-    this.y = this.player.y - this.height
+    this.stick = aOwner
+    if (aOwner){
+      this.x = aOwner.x + (aOwner.width - this.width) * 0.5
+      this.y = aOwner.y - this.height
+    }
     
     this.direction = {x: 0, y: 0}
     this[__.speed] = speed
 
   }
 
-  update() {
+  collided(aObject, aDelX, aDelY){
+    if (this.y + this.height < aObject.y && this.y + this.height + aDelY >= aObject.y){
+      let alpha = (aObject.y - this.y - this.height) / aDelY
+      let ax = this.x + alpha * aDelX
+      if (this.inWidthRange(ax, aObject.x, aObject)){
+        this.act.top()
+        return true
+      }
+    }
+    if (this.y > aObject.y + aObject.height && this.y + aDelY < aObject.y + aObject.height){
+      let alpha = (aObject.y + aObject.height - this.y) / aDelY
+      let ax = this.x + alpha * aDelX
+      if (this.inWidthRange(ax, aObject.x, aObject)){
+        this.act.bottom()
+        return true
+      }
+    }
+    if (this.x + this.width < aObject.x && this.x + this.width + aDelX > aObject.x){
+      let alpha = (aObject.x - this.x - this.width) / aDelX
+      let ay = this.y + alpha * aDelY
+      if (this.inHeightRange(ay, aObject.y, aObject)){
+        this.act.left()
+        return true
+      }
+    }
+    if (this.x > aObject.x + aObject.width && this.x + aDelX < aObject.x + aObject.width){
+      let alpha = (aObject.x + aObject.width - this.x) / aDelX
+      let ay = this.y + alpha * aDelY
+      if (this.inHeightRange(ay, aObject.y, aObject)){
+        this.act.right()
+        return true
+      }
+    }
+  }
+
+  update(aPlayers) {
     if (!this.stick){
       let delx = this.direction.x * this[__.speed]
       let dely = this.direction.y * this[__.speed]
-
-      if (this.y + this.height < this.player.y && this.y + this.height + dely >= this.player.y){
-        let alpha = (this.player.y - this.y - this.height) / dely
-        let ax = this.x + alpha * delx
-        if (ax + this.width > this.player.x && ax < this.player.x + this.player.width){
-          this.stick = true
-        }
-      }
+      for (let i in aPlayers)
+        if (this.collided(aPlayers[i], delx, dely))
+          break
       this.x += delx
       this.y += dely
 
@@ -74,7 +123,7 @@ export default class Ball extends Sprite {
       ct.x = x - ct.x
       ct.y = y - ct.y
       if (ct.x && ct.y){
-        this.stick = false
+        this.stick = null
         const len = Math.sqrt(ct.x * ct.x + ct.y * ct.y)
         this.direction = {x: ct.x / len, y: ct.y / len}
       }
