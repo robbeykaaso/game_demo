@@ -30,7 +30,7 @@ export default class Ball extends Sprite {
           this.direction.y *= - 1
         if (aDelY){
           this.y += aDelY
-          this[__.speed] += Math.abs(aDelY) * 0.1
+          this[__.speed].y += Math.abs(aDelY) * 0.2
         }
       },
       left: (aDelX)=>{
@@ -38,7 +38,7 @@ export default class Ball extends Sprite {
           this.direction.x *= - 1
         if (aDelX){
           this.x += aDelX
-          this[__.speed] += Math.abs(aDelX) * 0.1
+          this[__.speed].x += Math.abs(aDelX) * 0.2
         }
       },
       right: (aDelX)=>{
@@ -46,7 +46,7 @@ export default class Ball extends Sprite {
           this.direction.x *= - 1
         if (aDelX){
           this.x += aDelX
-          this[__.speed] += Math.abs(aDelX) * 0.1
+          this[__.speed].x += Math.abs(aDelX) * 0.2
         }
       },
       bottom: (aDelY)=>{
@@ -54,7 +54,7 @@ export default class Ball extends Sprite {
           this.direction.y *= - 1
         if (aDelY){
           this.y += aDelY
-          this[__.speed] += Math.abs(aDelY) * 0.1
+          this[__.speed].y += Math.abs(aDelY) * 0.2
         } 
       }
     }
@@ -66,7 +66,7 @@ export default class Ball extends Sprite {
     }
     
     this.direction = {x: 0, y: 0}
-    this[__.speed] = 5
+    this[__.speed] = {x: 5, y: 5}
 
   }
 
@@ -107,11 +107,15 @@ export default class Ball extends Sprite {
 
   update(aPlayers) {
     if (!this.stick){
-      if (this[__.speed] > 5)
-        this[__.speed] -= 0.1
+      if (this[__.speed].x > 5){
+        this[__.speed].x -= 0.05
+      }
+      if (this[__.speed].y > 5){
+        this[__.speed].y -= 0.05
+      }
 
-      let delx = this.direction.x * this[__.speed]
-      let dely = this.direction.y * this[__.speed]
+      let delx = this.direction.x * this[__.speed].x
+      let dely = this.direction.y * this[__.speed].y
 
       for (let i in aPlayers)
         if (this.collided(aPlayers[i], delx, dely))
