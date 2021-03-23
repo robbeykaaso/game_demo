@@ -2,6 +2,7 @@ import Player from './player/index'
 import Ball from './player/ball'
 import BackGround from './runtime/background'
 import StartBackGround from './runtime/startBackground'
+import LoadingBackGround from './runtime/loadingBackground'
 import Word from './runtime/word'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
@@ -65,7 +66,10 @@ class startScene extends scene {
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
     if (this.sports_btn.pointIsIn(x , y)){
-      this.parent.switchScene("train")
+      this.parent.switchScene("loading")
+      var e = this.parent
+      setTimeout(function(){e.switchScene("train")},1000)
+      
     }
   }
 
@@ -75,6 +79,20 @@ class startScene extends scene {
 
   leave(){
     canvas.removeEventListener('touchstart', this.bindStartGame)
+  }
+}
+
+class loadingScene extends scene {
+  constructor(aParent) {
+    super(aParent)
+    this.bg = new LoadingBackGround(ctx)
+  }
+  update(){
+    // this.bg.update(ctx)
+  }
+  render(){
+     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.bg.render(ctx)    
   }
 }
 
@@ -141,7 +159,9 @@ export default class Main {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
     this.scenes = {start: new startScene(this), 
-                   train: new trainScene(this)}
+                   train: new trainScene(this),
+                   loading: new loadingScene(this)
+                  }
     
     this.gameinfo = new GameInfo()
     this.music = new Music()
