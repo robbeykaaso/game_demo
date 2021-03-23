@@ -17,10 +17,11 @@ export default class Player extends Sprite {
     this.bindTouchEnd = this.touchEnd.bind(this)
   }
 
-  init(aMoveRange, aX, aY){
+  init(aMoveRange, aX, aY, aOrbit){
     this.x = aX
     this.y = aY
     this.move_range = aMoveRange
+    this.orbit = aOrbit
   }
 
   inBoundBox(x, y) {

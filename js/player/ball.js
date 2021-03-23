@@ -22,32 +22,40 @@ export default class Ball extends Sprite {
     return aBallY + this.height > aPlayerY && aBallY < aPlayerY + aObject.height
   }
 
-  init(speed, aOwner) {    
+  init(aOwner) {    
     this.act = {
       top: (aDelY)=>{
         //this.stick = true
         if (this.direction.y > 0)
           this.direction.y *= - 1
-        else
+        if (aDelY){
           this.y += aDelY
+          this[__.speed] += Math.abs(aDelY) * 0.1
+        }
       },
       left: (aDelX)=>{
         if (this.direction.x > 0)
           this.direction.x *= - 1
-        else
+        if (aDelX){
           this.x += aDelX
+          this[__.speed] += Math.abs(aDelX) * 0.1
+        }
       },
       right: (aDelX)=>{
         if (this.direction.x < 0)
           this.direction.x *= - 1
-        else
+        if (aDelX){
           this.x += aDelX
+          this[__.speed] += Math.abs(aDelX) * 0.1
+        }
       },
       bottom: (aDelY)=>{
         if (this.direction.y < 0)
           this.direction.y *= - 1
-        else
-          this.y += aDelY 
+        if (aDelY){
+          this.y += aDelY
+          this[__.speed] += Math.abs(aDelY) * 0.1
+        } 
       }
     }
 
@@ -58,7 +66,7 @@ export default class Ball extends Sprite {
     }
     
     this.direction = {x: 0, y: 0}
-    this[__.speed] = speed
+    this[__.speed] = 5
 
   }
 
@@ -99,8 +107,12 @@ export default class Ball extends Sprite {
 
   update(aPlayers) {
     if (!this.stick){
+      if (this[__.speed] > 5)
+        this[__.speed] -= 0.1
+
       let delx = this.direction.x * this[__.speed]
       let dely = this.direction.y * this[__.speed]
+
       for (let i in aPlayers)
         if (this.collided(aPlayers[i], delx, dely))
           break
@@ -108,10 +120,20 @@ export default class Ball extends Sprite {
       this.y += dely
 
       if (!this.stick){
-        if (this.y + this.height > window.innerHeight || this.y <0)
+        if (this.y + this.height > window.innerHeight){
+          this.y = window.innerHeight - this.height
           this.direction.y = - this.direction.y
-        if (this.x + this.width > window.innerWidth || this.x < 0)
+        }else if (this.y < 0){
+          this.y = 0
+          this.direction.y = - this.direction.y
+        }
+        if (this.x + this.width > window.innerWidth){
+          this.x = window.innerWidth - this.width
           this.direction.x = - this.direction.x
+        }else if (this.x < 0){
+          this.x = 0
+          this.direction.x = - this.direction.x
+        }
       }
     }
   }
