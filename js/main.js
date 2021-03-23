@@ -1,6 +1,8 @@
 import Player from './player/index'
 import Ball from './player/ball'
 import BackGround from './runtime/background'
+import StartBackGround from './runtime/startBackground'
+import Word from './runtime/word'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
 import StartGame from './startGame'
@@ -32,21 +34,37 @@ class scene {
 class startScene extends scene {
   constructor(aParent) {
     super(aParent)
-    this.btn = new StartGame(ctx)
+    const screenHeight = window.innerHeight
+    this.bg = new StartBackGround(ctx)
+
+    this.dq_word = new Word(ctx)
+    this.dq_word.img.src = "images/斗球字.png"
+
+    this.sports_btn = new StartGame(ctx)
+    this.sports_btn.img.src = "images/sports_btn.png"
+    this.sports_btn.y = screenHeight - this.sports_btn.height - 40
+
+    this.lt_btn = new StartGame(ctx)
+    this.lt_btn.img.src = "images/lt_btn.png"
+    this.lt_btn.y = screenHeight - this.lt_btn.height+10  
+
     this.bindStartGame = this.startGame.bind(this)
   }
   update(){
     
   }
   render(){
-    this.btn.drawToCanvas(ctx)
+    this.bg.render(ctx)
+    this.dq_word.drawToCanvas(ctx)
+    this.sports_btn.drawToCanvas(ctx)
+    this.lt_btn.drawToCanvas(ctx)
   }
 
   startGame(e){
     e.preventDefault()
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
-    if (this.btn.pointIsIn(x , y)){
+    if (this.sports_btn.pointIsIn(x , y)){
       this.parent.switchScene("train")
     }
   }
