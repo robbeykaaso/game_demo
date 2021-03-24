@@ -1,6 +1,9 @@
 import Player from './player/index'
 import Ball from './player/ball'
 import BackGround from './runtime/background'
+import StartBackGround from './runtime/startBackground'
+import LoadingBackGround from './runtime/loadingBackground'
+import Word from './runtime/word'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
 import StartGame from './startGame'
@@ -32,22 +35,41 @@ class scene {
 class startScene extends scene {
   constructor(aParent) {
     super(aParent)
-    this.btn = new StartGame(ctx)
+    const screenHeight = window.innerHeight
+    this.bg = new StartBackGround(ctx)
+
+    this.dq_word = new Word(ctx)
+    this.dq_word.img.src = "images/斗球字.png"
+
+    this.sports_btn = new StartGame(ctx)
+    this.sports_btn.img.src = "images/sports_btn.png"
+    this.sports_btn.y = screenHeight - this.sports_btn.height - 40
+
+    this.lt_btn = new StartGame(ctx)
+    this.lt_btn.img.src = "images/lt_btn.png"
+    this.lt_btn.y = screenHeight - this.lt_btn.height+10  
+
     this.bindStartGame = this.startGame.bind(this)
   }
   update(){
     
   }
   render(){
-    this.btn.drawToCanvas(ctx)
+    this.bg.render(ctx)
+    this.dq_word.drawToCanvas(ctx)
+    this.sports_btn.drawToCanvas(ctx)
+    this.lt_btn.drawToCanvas(ctx)
   }
 
   startGame(e){
     e.preventDefault()
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
-    if (this.btn.pointIsIn(x , y)){
-      this.parent.switchScene("train")
+    if (this.sports_btn.pointIsIn(x , y)){
+      this.parent.switchScene("loading")
+      var e = this.parent
+      setTimeout(function(){e.switchScene("train")},1000)
+      
     }
   }
 
@@ -57,6 +79,20 @@ class startScene extends scene {
 
   leave(){
     canvas.removeEventListener('touchstart', this.bindStartGame)
+  }
+}
+
+class loadingScene extends scene {
+  constructor(aParent) {
+    super(aParent)
+    this.bg = new LoadingBackGround(ctx)
+  }
+  update(){
+    // this.bg.update(ctx)
+  }
+  render(){
+     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.bg.render(ctx)    
   }
 }
 
@@ -123,7 +159,9 @@ export default class Main {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
     this.scenes = {start: new startScene(this), 
-                   train: new trainScene(this)}
+                   train: new trainScene(this),
+                   loading: new loadingScene(this)
+                  }
     
     this.gameinfo = new GameInfo()
     this.music = new Music()

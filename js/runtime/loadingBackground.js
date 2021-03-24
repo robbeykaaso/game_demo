@@ -3,28 +3,28 @@ import Sprite from '../base/sprite'
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
 
-const BG_IMG_SRC = 'images/bg2.png'
-const BG_WIDTH = 512
-const BG_HEIGHT = 512
+const BG_IMG_SRC = 'images/loading3.gif'
+const BG_WIDTH = screenWidth
+const BG_HEIGHT = screenHeight
 
 /**
  * 游戏背景类
  * 提供update和render函数实现无限滚动的背景功能
  */
-export default class BackGround extends Sprite {
+export default class LoadingBackGround extends Sprite {
   constructor(ctx) {
     super(BG_IMG_SRC, BG_WIDTH, BG_HEIGHT)
-
+    this.x = BG_WIDTH/2
+    this.y = BG_HEIGHT/2
     this.top = 0
-
     this.render(ctx)
   }
 
-  /*update() {
+  update() {
     this.top += 2
 
     if (this.top >= screenHeight) this.top = 0
-  }*/
+  }
 
   /**
    * 背景图重绘函数
