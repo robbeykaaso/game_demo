@@ -9,9 +9,9 @@ export default class startScene extends Scene {
   constructor(aParent) {
     super(aParent)
     this.bg = new BackGround.starting()
-    this.dq_word = new Sprite("images/斗球字.png", 500, 300, - 100, - 20)
-    this.sports_btn = new Sprite("images/sports_btn.png", 200, 120, screenWidth * 0.5 - 100, screenHeight - 160)
-    this.lt_btn = new Sprite("images/lt_btn.png", 200, 120, screenWidth * 0.5 - 100, screenHeight - 110)
+    this.dq_word = new Sprite("images/ball/斗球字.png", 500, 300, - 100, - 20)
+    this.sports_btn = new Sprite("images/ball/sports_btn.png", 200, 120, screenWidth * 0.5 - 100, screenHeight - 160)
+    this.lt_btn = new Sprite("images/ball/lt_btn.png", 200, 120, screenWidth * 0.5 - 100, screenHeight - 110)
 
     this.bindStartGame = this.startGame.bind(this)
   }

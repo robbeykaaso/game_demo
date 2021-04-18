@@ -1,7 +1,7 @@
-import Sprite from '../base/sprite'
+import Sprite from '../../base/sprite'
 
 // 玩家相关常量设置
-const PLAYER_IMG_SRC = 'images/panel.png'
+const PLAYER_IMG_SRC = 'images/ball/panel.png'
 const PLAYER_WIDTH = 50
 const PLAYER_HEIGHT = 50
 

@@ -1,7 +1,7 @@
 import Scene from './scene'
 import BackGround from '../runtime/background'
-import Player from '../object/slider'
-import Ball from '../object/ball'
+import Player from '../object/ball/slider'
+import Ball from '../object/ball/ball'
 
 export default class trainScene extends Scene {
   constructor(aParent) {

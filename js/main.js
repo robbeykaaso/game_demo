@@ -11,7 +11,8 @@ export default class Main {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
     this.scenes = {start: new Scene.Starting(this), 
-                   train: new Scene.Training(this),
+                   train: new Scene.Swinging(this),
+                   //train: new Scene.Training(this),
                    loading: new Scene.Loading(this)
                   }
     

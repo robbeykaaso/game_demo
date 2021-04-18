@@ -1,6 +1,6 @@
-import Sprite from '../base/sprite'
+import Sprite from '../../base/sprite'
 
-const BALL_IMG_SRC = 'images/ball.png'
+const BALL_IMG_SRC = 'images/ball/ball.png'
 const BALL_WIDTH = 30
 const BALL_HEIGHT = 30
 
